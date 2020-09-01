@@ -1,10 +1,7 @@
-//============================================================================
-// Name        : CppPlayground.cpp
-// Author      : Juri Bieler
-// Version     :
-// Copyright   : none
-// Description : test file for Stack and Queue
-//============================================================================
+/*
+ *  Created on: 20 Nov 2017
+ *      Author: Juri
+ */
 
 #include <iostream>
 #include <stdlib.h>
@@ -26,6 +23,11 @@ void stackPush(uint8_t val) {
 	printf("push, top %d\n", stack.top());
 }
 
+void stackPush(uint8_t* val) {
+	stack.push(val);
+	printf("push by pointer, top %d\n", stack.top());
+}
+
 void stackPop() {
 	stack.pop();
 	printf("pop, top %d\n", stack.top());
@@ -42,13 +44,15 @@ void quePop() {
 }
 
 int main() {
-	printf("--------------------n");
+	printf("--------------------\n");
 	printf("test Stack...\n");
 
 	uint8_t buffS[5];
 	stack.init(buffS, 5);
 	stackPush(1);
-	stackPush(2);
+    // push by pointer
+    uint8_t val = 2;
+	stackPush(&val);
 	stackPush(3);
 	stackPush(4);
 	stackPop();
@@ -61,7 +65,6 @@ int main() {
 	stackPush(10);
 	stackPop();
 	printf("get 0 %d\n", stack.get(0));
-	printf("get 0 %d\n", stack.get(0));
 	printf("get 1 %d\n", stack.get(1));
 	printf("get 2 %d\n", stack.get(2));
 	printf("get 3 %d\n", stack.get(3));
@@ -70,7 +73,7 @@ int main() {
 	printf("get 6 %d\n", stack.get(6));
 	printf("get 7 %d\n", stack.get(7));
 
-	printf("--------------------n");
+	printf("--------------------\n");
 	printf("test Queue...\n");
 
 	uint8_t buffQ[5];
@@ -84,7 +87,6 @@ int main() {
 	quePush(5);
 	quePush(6);
 	quePop();
-	printf("get 0 %d\n", que.get(0));
 	printf("get 0 %d\n", que.get(0));
 	printf("get 1 %d\n", que.get(1));
 	printf("get 2 %d\n", que.get(2));
