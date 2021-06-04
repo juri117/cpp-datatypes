@@ -15,16 +15,27 @@ template <class T>
 
 class Queue {
  private:
-  T* buff;
+  T *buff;
   uint16_t size;
   uint16_t writePoint;
   uint16_t readPoint;
-  uint16_t inc_pointer(uint16_t point) {
-    point++;
-    if (point >= this->size) {
-      point = 0;
+  uint16_t current_size = 0;
+
+  void inc_read_pointer() {
+    this->readPoint++;
+    if (this->readPoint >= this->size) {
+      this->readPoint = 0;
     }
-    return point;
+
+    if (this->current_size > 0) this->current_size--;
+  }
+
+  void inc_write_pointer() {
+    this->writePoint++;
+    if (this->writePoint >= this->size) {
+      this->writePoint = 0;
+    }
+    if (this->current_size < this->size) this->current_size++;
   }
 
  public:
@@ -34,35 +45,35 @@ class Queue {
     this->readPoint = 0;
     this->buff = nullptr;
   }
-  void init(T* storage, uint16_t size) {
+  void init(T *storage, uint16_t size) {
     this->buff = storage;
     this->size = size;
     this->writePoint = 0;
     this->readPoint = 0;
   }
-  void push(const T* in) {
+  void push(const T *in) {
     this->buff[this->writePoint] = *in;
-    this->writePoint = this->inc_pointer(this->writePoint);
+    this->inc_write_pointer();
   }
-void push(const T in) {
+  void push(const T in) {
     this->buff[this->writePoint] = in;
-    this->writePoint = this->inc_pointer(this->writePoint);
+    this->inc_write_pointer();
   }
   T push_get_pointer() {
     T pointer = this->buff[this->writePoint];
-    this->writePoint = this->inc_pointer(this->writePoint);
+    this->inc_write_pointer();
     return pointer;
   }
   T top() {
     T out = this->buff[this->readPoint];
-    this->readPoint = this->inc_pointer(this->readPoint);
+    this->inc_read_pointer();
     return out;
   }
-  T* getTop() {
-    T* out = &buff[this->readPoint];
+  T *getTop() {
+    T *out = &buff[this->readPoint];
     return out;
   }
-  void pop() { this->readPoint = this->inc_pointer(this->readPoint); }
+  void pop() { this->inc_read_pointer(); }
   T get(uint16_t index) {
     index = index % this->size;
     uint16_t i = this->readPoint;
@@ -74,13 +85,8 @@ void push(const T in) {
     T outByte = this->buff[i];
     return outByte;
   }
-  bool is_empty() { return this->readPoint == this->writePoint; }
-  uint16_t get_member_count() {
-    if (this->writePoint >= this->readPoint) {
-      return this->writePoint - this->readPoint;
-    }
-    return this->size - (this->readPoint - this->writePoint) + 1;
-  }
+  bool is_empty() { return this->current_size == 0; }
+  uint16_t get_member_count() { return this->current_size; }
   void clear() {
     this->writePoint = 0;
     this->readPoint = 0;
