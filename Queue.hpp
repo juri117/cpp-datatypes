@@ -22,12 +22,13 @@ class Queue {
   uint16_t current_size = 0;
 
   void inc_read_pointer() {
-    this->readPoint++;
-    if (this->readPoint >= this->size) {
-      this->readPoint = 0;
+    if (!is_empty()) {
+      this->readPoint++;
+      if (this->readPoint >= this->size) {
+        this->readPoint = 0;
+      }
+      if (this->current_size > 0) this->current_size--;
     }
-
-    if (this->current_size > 0) this->current_size--;
   }
 
   void inc_write_pointer() {
@@ -35,7 +36,14 @@ class Queue {
     if (this->writePoint >= this->size) {
       this->writePoint = 0;
     }
-    if (this->current_size < this->size) this->current_size++;
+    if (!this->is_full()) {
+      this->current_size++;
+    } else {
+      this->readPoint++;
+      if (this->readPoint >= this->size) {
+        this->readPoint = 0;
+      }
+    }
   }
 
  public:
@@ -86,6 +94,7 @@ class Queue {
     return outByte;
   }
   bool is_empty() { return this->current_size == 0; }
+  bool is_full() { return this->current_size == size; }
   uint16_t get_member_count() { return this->current_size; }
   void clear() {
     this->writePoint = 0;
