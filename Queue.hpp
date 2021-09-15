@@ -99,6 +99,7 @@ class Queue {
   void clear() {
     this->writePoint = 0;
     this->readPoint = 0;
+    this->current_size = 0;
   }
 };
 
