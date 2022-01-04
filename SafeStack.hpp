@@ -37,7 +37,8 @@ class SafeStack {
   void push(T* t) {
     std::lock_guard<std::mutex> lock(m);
     if (this->is_full()) {
-      printf("WARNING, %s is full, type: %s\n", tag, typeid(T).name());
+      printf("WARNING, %s is full(%d), type: %s\n", tag,
+             this->get_member_count(), typeid(T).name());
       s.pop();
     }
     s.push(*t);
@@ -46,7 +47,8 @@ class SafeStack {
   void push(T t) {
     std::lock_guard<std::mutex> lock(m);
     if (this->is_full()) {
-      printf("WARNING, %s is full, type: %s\n", tag, typeid(T).name());
+      printf("WARNING, %s is full(%d), type: %s\n", tag,
+             this->get_member_count(), typeid(T).name());
       s.pop();
     }
     s.push(t);

@@ -18,11 +18,7 @@
 template <class T>
 class SafeQueue {
  public:
-  SafeQueue(void)
-      : q(),
-        m(),
-        max_length(16),
-        tag() {}
+  SafeQueue(void) : q(), m(), max_length(16), tag() {}
 
   ~SafeQueue(void) {}
 
@@ -31,16 +27,26 @@ class SafeQueue {
     this->tag = tag;
   }
 
-  bool is_empty() { return this->q.empty(); }
+  bool is_empty() {
+    std::lock_guard<std::mutex> lock(m);
+    return this->q.empty();
+  }
 
-  uint16_t get_member_count() { return this->q.size(); }
+  uint16_t get_member_count() {
+    std::lock_guard<std::mutex> lock(m);
+    return this->q.size();
+  }
 
-  bool is_full() { return this->get_member_count() >= max_length; }
+  bool is_full() {
+    std::lock_guard<std::mutex> lock(m);
+    return this->q.size() >= this->max_length;
+  }
 
   void push(T* t) {
     std::lock_guard<std::mutex> lock(m);
-    if (this->is_full()) {
-      printf("WARNING, %s is full, type: %s\n", tag, typeid(T).name());
+    while (this->q.size() >= this->max_length) {
+      printf("WARNING, %s is full(%d), type: %s\n", tag, this->q.size(),
+             typeid(T).name());
       q.pop();
     }
     q.push(*t);
@@ -48,8 +54,9 @@ class SafeQueue {
 
   void push(T t) {
     std::lock_guard<std::mutex> lock(m);
-    if (this->is_full()) {
-      printf("WARNING, %s is full, type: %s\n", tag, typeid(T).name());
+    while (this->q.size() >= this->max_length) {
+      printf("WARNING, %s is full(%d), type: %s\n", tag, this->q.size(),
+             typeid(T).name());
       q.pop();
     }
     q.push(t);
