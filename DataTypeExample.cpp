@@ -3,98 +3,152 @@
  *      Author: Juri
  */
 
-#include <iostream>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
+
+#include <iostream>
+
 #include "stdint.h"
 using namespace std;
 
-#include "Stack.hpp"
 #include "Queue.hpp"
+#include "SafeQueue.hpp"
+#include "SafeStack.hpp"
+#include "Stack.hpp"
 
-typedef Stack<uint8_t> IntStack;
-typedef Queue<uint8_t> IntQueue;
+// typedef Stack<uint8_t> IntStack;
+// typedef Queue<uint8_t> IntQueue;
 
-IntStack stack;
-IntQueue que;
+// IntStack stack;
+// IntQueue que;
 
+/*
 void stackPush(uint8_t val) {
-	stack.push(val);
-	printf("push, top %d\n", stack.top());
+  stack.push(val);
+  printf("push, top %d\n", stack.top());
 }
 
 void stackPush(uint8_t* val) {
-	stack.push(val);
-	printf("push by pointer, top %d\n", stack.top());
+  stack.push(val);
+  printf("push by pointer, top %d\n", stack.top());
 }
 
 void stackPop() {
-	stack.pop();
-	printf("pop, top %d\n", stack.top());
+  stack.pop();
+  printf("pop, top %d\n", stack.getTop());
 }
 
 void quePush(uint8_t val) {
-	que.push(val);
-	printf("push, top %d\n", que.top());
+  que.push(val);
+  printf("push, top %d\n", que.getTop());
 }
 
 void quePop() {
-	que.pop();
-	printf("pop, top %d\n", que.top());
+  que.pop();
+  printf("pop, top %d\n", que.getTop());
 }
+*/
 
 int main() {
-	printf("--------------------\n");
-	printf("test Stack...\n");
+  uint8_t val = 2;
 
-	uint8_t buffS[5];
-	stack.init(buffS, 5);
-	stackPush(1);
-    // push by pointer
-    uint8_t val = 2;
-	stackPush(&val);
-	stackPush(3);
-	stackPush(4);
-	stackPop();
-	stackPop();
-	stackPush(5);
-	stackPush(6);
-	stackPush(7);
-	stackPush(8);
-	stackPush(9);
-	stackPush(10);
-	stackPop();
-	printf("get 0 %d\n", stack.get(0));
-	printf("get 1 %d\n", stack.get(1));
-	printf("get 2 %d\n", stack.get(2));
-	printf("get 3 %d\n", stack.get(3));
-	printf("get 4 %d\n", stack.get(4));
-	printf("get 5 %d\n", stack.get(5));
-	printf("get 6 %d\n", stack.get(6));
-	printf("get 7 %d\n", stack.get(7));
+  printf("--------------------\n");
+  printf("test Stack...\n");
 
-	printf("--------------------\n");
-	printf("test Queue...\n");
+  uint8_t buffS[5];
+  Stack<uint8_t> stack;
+  stack.init(buffS, 5);
+  stack.push(1);
+  // push by pointer
+  stack.push(&val);
+  stack.push(3);
+  stack.push(4);
+  stack.push(5);
+  stack.push(6);
+  stack.top();
+  stack.pop();
+  stack.push(7);
+  stack.push(8);
+  stack.push(9);
 
-	uint8_t buffQ[5];
-	que.init(buffQ, 5);
-	quePush(1);
-	quePush(2);
-	quePush(3);
-	quePush(4);
-	quePop();
-	quePop();
-	quePush(5);
-	quePush(6);
-	quePop();
-	printf("get 0 %d\n", que.get(0));
-	printf("get 1 %d\n", que.get(1));
-	printf("get 2 %d\n", que.get(2));
-	printf("get 3 %d\n", que.get(3));
-	printf("get 4 %d\n", que.get(4));
-	printf("get 5 %d\n", que.get(5));
-	printf("get 6 %d\n", que.get(6));
-	printf("get 7 %d\n", que.get(7));
+  for (uint8_t i = 0; i < 10; i++) {
+    uint8_t val = stack.top();
+    printf("get %d %d (s: %d -> %d)\n", i, val, stack.get_member_count(),
+           stack.is_empty());
+  }
 
-	return 0;
+  printf("--------------------\n");
+  printf("test SafeStack...\n");
+
+  SafeStack<uint8_t> safeStack;
+  safeStack.init(5);
+  safeStack.push(1);
+  // push by pointer
+  safeStack.push(&val);
+  safeStack.push(3);
+  safeStack.push(4);
+  safeStack.push(5);
+  safeStack.push(6);
+  safeStack.top();
+  safeStack.pop();
+  safeStack.push(7);
+  safeStack.push(8);
+  safeStack.push(9);
+
+  for (uint8_t i = 0; i < 10; i++) {
+    uint8_t val = safeStack.top();
+    printf("get %d %d (s: %d -> %d)\n", i, val, safeStack.get_member_count(),
+           safeStack.is_empty());
+  }
+
+  printf("--------------------\n");
+  printf("test Queue...\n");
+
+  uint8_t buffQ[5];
+  Queue<uint8_t> que;
+  que.init(buffQ, 5);
+  que.push(1);
+  // push by pointer
+  que.push(&val);
+  que.push(3);
+  que.push(4);
+  que.push(5);
+  que.push(6);
+  que.top();
+  que.pop();
+  que.push(7);
+  que.push(8);
+  que.push(9);
+
+  for (uint8_t i = 0; i < 10; i++) {
+    uint8_t val = que.top();
+    printf("get %d %d (s: %d -> %d)\n", i, val, que.get_member_count(),
+           que.is_empty());
+  }
+
+  printf("--------------------\n");
+  printf("test SafeQueue...\n");
+
+  SafeQueue<uint8_t> safeQue;
+  safeQue.init(5);
+  safeQue.push(1);
+  // push by pointer
+  safeQue.push(&val);
+  safeQue.push(3);
+  safeQue.push(4);
+  safeQue.push(5);
+  safeQue.push(6);
+  safeQue.top();
+  safeQue.pop();
+  safeQue.push(7);
+  safeQue.push(8);
+  safeQue.push(9);
+
+  for (uint8_t i = 0; i < 10; i++) {
+    uint8_t val = safeQue.top();
+    printf("get %d %d (s: %d -> %d)\n", i, val, safeQue.get_member_count(),
+           safeQue.is_empty());
+  }
+
+  return 0;
 }

@@ -29,6 +29,7 @@ class Queue {
       }
       if (this->current_size > 0) this->current_size--;
     }
+    // printf("read %d (size: %d)\n", this->readPoint, this->current_size);
   }
 
   void inc_write_pointer() {
@@ -44,6 +45,7 @@ class Queue {
         this->readPoint = 0;
       }
     }
+    // printf("write %d (size: %d)\n", this->writePoint, this->current_size);
   }
 
  public:
@@ -77,8 +79,12 @@ class Queue {
     this->inc_read_pointer();
     return out;
   }
-  T *getTop() {
+  T *getTopPoint() {
     T *out = &buff[this->readPoint];
+    return out;
+  }
+  T getTop() {
+    T out = buff[this->readPoint];
     return out;
   }
   void pop() { this->inc_read_pointer(); }
@@ -94,7 +100,7 @@ class Queue {
     return outByte;
   }
   bool is_empty() { return this->current_size == 0; }
-  bool is_full() { return this->current_size == size; }
+  bool is_full() { return this->current_size >= size; }
   uint16_t get_member_count() { return this->current_size; }
   void clear() {
     this->writePoint = 0;

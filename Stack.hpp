@@ -64,6 +64,7 @@ class Stack {
   }
   T top() {
     T out = this->buff[this->dec_pointer(this->writePoint)];
+    this->pop();
     return out;
   }
   T* getTop() {
